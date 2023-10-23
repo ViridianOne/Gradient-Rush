@@ -30,7 +30,7 @@
     {"resourceType":"GMImageLayer","resourceVersion":"1.0","name":"e5f6be83-9b72-4627-9d18-faaa603ffbd0","blendMode":0,"displayName":"default","isLocked":false,"opacity":100.0,"visible":true,},
   ],
   "nineSlice": null,
-  "origin": 9,
+  "origin": 7,
   "parent": {
     "name": "Add",
     "path": "folders/Sprites/Add.yy",
@@ -73,7 +73,7 @@
     ],
     "visibleRange": null,
     "volume": 1.0,
-    "xorigin": 31,
+    "xorigin": 32,
     "yorigin": 59,
   },
   "swatchColours": null,
@@ -84,5 +84,5 @@
   },
   "type": 0,
   "VTile": false,
-  "width": 63,
+  "width": 64,
 }

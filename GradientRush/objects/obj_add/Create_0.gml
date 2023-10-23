@@ -52,6 +52,9 @@ can_jump = false;
 //squat
 is_squated = false;
 
+//dash
+can_dash = true;
+
 //wall jump
 is_wall_right = false;
 is_wall_left = false;

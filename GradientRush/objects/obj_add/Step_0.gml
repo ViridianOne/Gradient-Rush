@@ -35,12 +35,15 @@ function make_dash() {
 		max_spd = 20;
 		h_spd = max_spd * sign(image_xscale);
 		decceleration = 0.05;
+		can_dash = is_on_ground;
+		additive_jump_force = 1.5;
+		hold_timer = 0;
 	}
 }
 
 function move_horizontal() {
 	if(can_move) {
-		if(state != ADD_STATES.DASHING) {
+		if(state != ADD_STATES.DASHING && can_dash) {
 			make_dash();
 		}
 		if(move_input != 0 && (sign(h_spd) == sign(move_input) || h_spd == 0 || !is_on_ground) && state != ADD_STATES.DASHING) {
@@ -81,9 +84,7 @@ function make_jump(_start_condition, _h_bust = false) {
 		}
 		max_spd *= 1.25;
 		spd = max_spd;
-		if(alarm[0] <= -1) {
-			alarm[0] = 3;
-		}
+		alarm[0] = 3;
 		mask_index = spr_add_jump;
 	}
 	if(jump && can_jump && hold_timer < 18) {
@@ -94,7 +95,9 @@ function make_jump(_start_condition, _h_bust = false) {
 		}
 	}
 	if(jump_end || hold_timer >= 18) {
-		v_spd -= v_spd / 10;
+		if(!_h_bust) {
+			v_spd -= v_spd / 10;
+		}
 		additive_jump_force = 1.5;
 		max_spd = 4;
 		mask_index = spr_add_idle;
@@ -138,6 +141,7 @@ function move_vertical() {
 			hold_timer = 0;
 			alarm[1] = 3;
 			jump_force = -5;
+			can_dash = true;
 		}
 		
 		if(state != ADD_STATES.LANDING) {
@@ -149,7 +153,9 @@ function move_vertical() {
 		}
 	}
 	
-	if(state == ADD_STATES.SLIDING) {
+	if(v_spd < -15) {
+		v_spd = v_spd + grv * 15;
+	} else if(state == ADD_STATES.SLIDING) {
 		v_spd = v_spd + grv / 2;
 	} else if (state == ADD_STATES.DASHING) {
 		v_spd = 0;
