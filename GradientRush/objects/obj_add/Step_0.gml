@@ -8,33 +8,37 @@ function check_input() {
 	squat_start = keyboard_check_pressed(squat_btn);
 	squat_end = keyboard_check_released(squat_btn);
 	dash = keyboard_check_pressed(dash_btn);
+	is_color_hud_open = mouse_check_button(1);
 	move_input = right - left;
 }
 
-function check_color_input() {
-	if(keyboard_check_pressed(red_btn)) {
+function check_color_input() {	
+	hue = point_direction(x, y, mouse_x, mouse_y);
+	if(hue < 30 || hue >= 330) {
 		color = COLORS.RED;
-	}
-	if(keyboard_check_pressed(yellow_btn)) {
+		color_wheel_image_index = 1;
+	} else if(hue >= 30 && hue < 90) {
 		color = COLORS.YELLOW;
-	}
-	if(keyboard_check_pressed(green_btn)) {
+		color_wheel_image_index = 2;
+	} else if(hue >= 90 && hue < 150) {
 		color = COLORS.GREEN;
-	}
-	if(keyboard_check_pressed(cyan_btn)) {
+		color_wheel_image_index = 3;
+	} else if(hue >= 150 && hue < 210) {
 		color = COLORS.CYAN;
-	}
-	if(keyboard_check_pressed(blue_btn)) {
+		color_wheel_image_index = 4;
+	} else if (hue >= 210 && hue < 270) {
 		color = COLORS.BLUE;
-	}
-	if(keyboard_check_pressed(magenta_btn)) {
+		color_wheel_image_index = 5;
+	} else if (hue >= 270 && hue < 330) {
 		color = COLORS.MAGENTA;
+		color_wheel_image_index = 6;
 	}
 }
 
 function change_color() {
-	check_color_input();
-	
+	if(is_color_hud_open) {
+		check_color_input();
+	}
 	switch(color) {
 		case COLORS.RED:
 			image_blend = c_red;
@@ -114,7 +118,7 @@ function move_horizontal() {
 		}
 	}
 	check_h_collision();
-	x += h_spd * magenta_interaction.speed_relativity;
+	x += h_spd * magenta_interaction.speed_relativity * obj_game_manager.global_speed;
 }
 
 function make_jump(_start_condition, _h_bust = false, is_green_inter = false) {
@@ -229,7 +233,7 @@ function move_vertical() {
 	}
 	
 	check_v_collision();
-	y += v_spd;
+	y += v_spd * obj_game_manager.global_speed;
 }
 
 function is_blinking_state() {
@@ -266,16 +270,19 @@ function handle_animation() {
 	} else if(abs(v_spd) > 2) {
 		if (v_spd < 0 && state == ADD_STATES.JUMPING) {
 			sprite_index = spr_add_jump;
-			image_speed = round(image_index) >= image_number - 1 ? 0 : 1;
+			//image_speed = round(image_index) >= image_number - 1 ? 0 : 1;
 		} else if (v_spd > 0 && state != ADD_STATES.SQUATED && place_meeting(x, y + 16 + v_spd, obj_ground)) {
 			if(sprite_index != spr_add_landing) {
 				image_index = 0;
 			}
 			sprite_index = spr_add_landing;
-			image_speed = round(image_index) >= image_number - 1 ? 0 : 1;
+			//image_speed = round(image_index) >= image_number - 1 ? 0 : 1;
 		} else if(v_spd > 0) {
 			sprite_index = spr_add_falling;
 		}
+	}
+	if(sprite_index == spr_add_jump || sprite_index == spr_add_landing) {
+		image_speed = round(image_index) >= image_number - 1 ? 0 : 1;
 	}
 }
 
@@ -360,21 +367,24 @@ function check_magenta_interaction() {
 	}
 }
 
-check_input();
-change_color();
-if(state != ADD_STATES.LOST) {
-	is_on_ground = place_meeting(x, y + 1, obj_ground);
-	if(location == COLORS.GREEN) {
-		check_green_interaction();
-	} else {
-		check_magenta_interaction();
+if(!obj_game_manager.is_paused) {
+	check_input();
+	change_color();
+	if(state != ADD_STATES.LOST) {
+		obj_game_manager.global_speed = is_color_hud_open ? 0.25 : 1;
+		is_on_ground = place_meeting(x, y + 1, obj_ground);
+		if(location == COLORS.GREEN) {
+			check_green_interaction();
+		} else {
+			check_magenta_interaction();
+		}
+		if(state != ADD_STATES.JUMPING && state != ADD_STATES.LANDING && state != ADD_STATES.SQUATING 
+			&& state != ADD_STATES.STICKIED && state != ADD_STATES.SLIDING) {
+			move_horizontal();
+		}
+		move_vertical();
+		handle_animation();
 	}
-	if(state != ADD_STATES.JUMPING && state != ADD_STATES.LANDING && state != ADD_STATES.SQUATING 
-		&& state != ADD_STATES.STICKIED && state != ADD_STATES.SLIDING) {
-		move_horizontal();
-	}
-	move_vertical();
-	handle_animation();
-}
 
-check_existance();
+	check_existance();
+}

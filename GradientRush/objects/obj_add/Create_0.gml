@@ -74,6 +74,9 @@ ds_map_add(add_blink, ADD_STATES.SQUATED, 8);*/
 color = COLORS.YELLOW;
 color_dif = 0;
 relationship = RELATIONSHIPS.NEUTRAL;
+is_color_hud_open = false;
+hue = 0;
+color_wheel_image_index = 2;
 
 //green
 green_interaction = {
@@ -110,7 +113,7 @@ magenta_interaction = {
 }
 
 //location
-location = COLORS.MAGENTA;
+location = COLORS.GREEN;
 color_interactions = ds_map_create();
 ds_map_add(color_interactions, COLORS.GREEN, green_interaction);
 ds_map_add(color_interactions, COLORS.MAGENTA, magenta_interaction);

@@ -4,4 +4,4 @@ if(x >= 700 && x <= 710) {
 	spd = 6;
 }
 
-x += spd * obj_game_manager.obj_speed_relativity;
+x += spd * obj_game_manager.obj_speed_relativity * obj_game_manager.global_speed;
