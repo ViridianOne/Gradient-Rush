@@ -33,6 +33,7 @@ acceleration = 0.05;
 additional_accl = 1.1;
 decceleration = 0.1;
 h_spd = 0;
+carrying_h_spd = 0;
 can_move = true;
 
 //sprites & colliders
@@ -47,6 +48,7 @@ blink_time = 5;
 //vertical mechanics
 grv = 0.5;
 v_spd = 0;
+carrying_v_spd = 0;
 jump_force = -5;
 additive_jump_force = 1.5;
 jump_force_multiplier = 0.88;
@@ -117,3 +119,17 @@ location = COLORS.GREEN;
 color_interactions = ds_map_create();
 ds_map_add(color_interactions, COLORS.GREEN, green_interaction);
 ds_map_add(color_interactions, COLORS.MAGENTA, magenta_interaction);
+
+//rotation
+radius = 0;
+rotation_spd = 0;
+rotation_angle = 361;
+gear_x = 0;
+gear_y = 0;
+a = 0;
+can_interact_with_gear = true;
+
+//flash
+has_touched_flash = false;
+can_touch_flash = true;
+flash_jump_force = 0;

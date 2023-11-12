@@ -62,8 +62,8 @@ function change_color() {
 }
 
 function check_h_collision() {
-	if(place_meeting(x + h_spd, y, obj_ground)) {
-		while(!place_meeting(x + sign(h_spd), y, obj_ground)) {
+	if(place_meeting(x + h_spd, y, tag_get_asset_ids("ground", asset_object))) {
+		while(!place_meeting(x + sign(h_spd), y, tag_get_asset_ids("ground", asset_object))) {
 			x += sign(h_spd);
 		}
 	h_spd = 0;
@@ -71,8 +71,8 @@ function check_h_collision() {
 }
 
 function check_v_collision() {
-	if(place_meeting(x, y + v_spd, obj_ground)) {
-		while(!(place_meeting(x, y + sign(v_spd), obj_ground))) {
+	if(place_meeting(x, y + v_spd,  tag_get_asset_ids("ground", asset_object))) {
+		while(!(place_meeting(x, y + sign(v_spd),  tag_get_asset_ids("ground", asset_object)))) {
 			y += sign(v_spd);
 		}
 	v_spd = 0;
@@ -121,6 +121,25 @@ function move_horizontal() {
 	x += h_spd * magenta_interaction.speed_relativity * obj_game_manager.global_speed;
 }
 
+function make_dash_from_gear() {
+	if(jump_start) {
+		can_jump = true;
+		green_interaction.can_jump = false;
+		state = ADD_STATES.JUMPING;
+		can_move = false;
+		image_index = 0;
+		alarm[2] = 10;
+		max_spd = 6;
+		h_spd = abs(rotation_spd) * 2 * dcos(rotation_angle + 90) * sign(rotation_spd);
+		jump_force = abs(rotation_spd) * 7 * -dsin(rotation_angle + 90) * sign(rotation_spd);
+		v_spd = jump_force;
+		mask_index = spr_add_jump;
+		can_interact_with_gear = false;
+		alarm[5] = 10;
+		state = ADD_STATES.MOVING;
+	}
+}
+
 function make_jump(_start_condition, _h_bust = false, is_green_inter = false) {
 	if(_start_condition) {
 		can_jump = true;
@@ -128,18 +147,23 @@ function make_jump(_start_condition, _h_bust = false, is_green_inter = false) {
 		state = ADD_STATES.JUMPING;
 		image_index = 0;
 		if(_h_bust) {
-				can_move = false;
-				if(!is_green_inter) {
-					jump_force = -15;
-				}
-				alarm[2] = 10;
+			can_move = false;
+			if(!is_green_inter) {
+				jump_force = -15;
+			}
+			alarm[2] = 10;
 			h_spd = max_spd * -image_xscale;
 		}
 		max_spd = 5;
 		spd = max_spd;
-		alarm[0] = 3;
+		alarm[0] = has_touched_flash ? 1 : 3;
 		mask_index = spr_add_jump;
+		has_touched_flash = false;
 	}
+	/*if(has_touched_flash && y < yprevious - 5) {
+		has_touched_flash = false;
+		can_touch_flash = true;
+	}*/
 	if(jump && can_jump && hold_timer < 18 && !is_green_inter) {
 		v_spd -= additive_jump_force;
 		additive_jump_force *= jump_force_multiplier;
@@ -200,40 +224,55 @@ function move_vertical() {
 			green_interaction.can_jump = true;
 		}
 		
-		if(state != ADD_STATES.LANDING && !green_interaction.more_monochromatic) {
-			make_jump(jump_start && is_on_ground);
+		if(state != ADD_STATES.LANDING) {
+			if(state != ADD_STATES.ROTATING && !green_interaction.more_monochromatic) {
+				make_jump(jump_start && is_on_ground);
+			} else {
+				make_dash_from_gear();
+			}
 		}
-	
+		
+		if(has_touched_flash) {
+			make_jump(true);
+		}
+		
 		if(is_on_ground) {
 			make_squat();
 		}
 	}
 	
-	if(v_spd < -15) {
-		v_spd = v_spd + grv * 15 * magenta_interaction.gravity_multiplier;
-	} else if(state == ADD_STATES.SLIDING) {
-		v_spd = v_spd + grv / 2 * magenta_interaction.gravity_multiplier;
-	} else if (state == ADD_STATES.DASHING) {
-		v_spd = 0;
-	} else if(v_spd > 2) {
-		v_spd = v_spd + grv * 2 * magenta_interaction.gravity_multiplier;
-	} else {
-		v_spd = v_spd < 2 && v_spd > -2 
-			? v_spd + grv / 1.5 * magenta_interaction.gravity_multiplier 
-			: v_spd + grv * magenta_interaction.gravity_multiplier;
-	}
+		if(v_spd < -15) {
+			v_spd = v_spd + grv * 15 * magenta_interaction.gravity_multiplier;
+			a = 0;
+		} else if(state == ADD_STATES.SLIDING) {
+			v_spd = v_spd + grv / 2 * magenta_interaction.gravity_multiplier;
+			a = 1;
+		} else if (state == ADD_STATES.DASHING) {
+			v_spd = 0;
+			a = 2;
+		} else if(v_spd > 2) {
+			v_spd = v_spd + grv * 2 * magenta_interaction.gravity_multiplier;
+			a = 3;
+		} else {
+			v_spd = v_spd < 2 && v_spd > -2 
+				? v_spd + grv / 1.5 * magenta_interaction.gravity_multiplier 
+				: v_spd + grv * magenta_interaction.gravity_multiplier;
+			a = 4;
+		}
 	
-	if(!is_on_ground && state != ADD_STATES.JUMPING && (place_meeting(x + 1, y, obj_ground) && right || place_meeting(x - 1, y, obj_ground) && left)) {
+	if(!is_on_ground && state != ADD_STATES.JUMPING && (place_meeting(x + 1, y, tag_get_asset_ids("ground", asset_object)) && right || place_meeting(x - 1, y, tag_get_asset_ids("ground", asset_object)) && left)) {
 		make_wall_jump();
 	}
 	
 	if((state == ADD_STATES.STICKIED || state == ADD_STATES.SLIDING) 
-		&& (place_meeting(x + 1, y, obj_ground) && !right || place_meeting(x - 1, y, obj_ground) && !left)) {
+		&& (place_meeting(x + 1, y, tag_get_asset_ids("ground", asset_object)) && !right || place_meeting(x - 1, y, tag_get_asset_ids("ground", asset_object)) && !left)) {
 		state = ADD_STATES.MOVING;
 	}
 	
-	check_v_collision();
-	y += v_spd * obj_game_manager.global_speed;
+	if(state != ADD_STATES.ROTATING) {
+		check_v_collision();
+		y += v_spd * obj_game_manager.global_speed;
+	}
 }
 
 function is_blinking_state() {
@@ -271,7 +310,7 @@ function handle_animation() {
 		if (v_spd < 0 && state == ADD_STATES.JUMPING) {
 			sprite_index = spr_add_jump;
 			//image_speed = round(image_index) >= image_number - 1 ? 0 : 1;
-		} else if (v_spd > 0 && state != ADD_STATES.SQUATED && place_meeting(x, y + 16 + v_spd, obj_ground)) {
+		} else if (v_spd > 0 && state != ADD_STATES.SQUATED && place_meeting(x, y + 16 + v_spd, tag_get_asset_ids("ground", asset_object))) {
 			if(sprite_index != spr_add_landing) {
 				image_index = 0;
 			}
@@ -297,7 +336,7 @@ function check_existance() {
 }
 
 function check_green_interaction() {
-	if(green_interaction.more_monochromatic) {
+	if(green_interaction.more_monochromatic && state != ADD_STATES.ROTATING) {
 		switch(green_interaction.relationship) {
 			case RELATIONSHIPS.MONOCHROMATIC:
 				green_interaction.additional_jump_force = green_interaction.high_springines;
@@ -310,7 +349,7 @@ function check_green_interaction() {
 				break;
 		}
 		if(state != ADD_STATES.LANDING) {
-			var _a = place_meeting(x + 1, y-5, obj_ground) || place_meeting(x - 1, y-5, obj_ground);
+			var _a = place_meeting(x + 1, y-5, tag_get_asset_ids("ground", asset_object)) || place_meeting(x - 1, y-5, tag_get_asset_ids("ground", asset_object));
 			make_jump(is_on_ground && green_interaction.can_jump || _a, _a, true);
 		}
 	} else if(green_interaction.more_complementary) {
@@ -367,22 +406,38 @@ function check_magenta_interaction() {
 	}
 }
 
+function rotate_around_the_gear() {
+	rotation_angle += rotation_spd;
+	if(rotation_angle >= 360) {
+		rotation_angle = 0;
+	}
+	
+	h_spd = lengthdir_x(radius, rotation_angle);
+	x = gear_x + h_spd;
+	
+	v_spd = lengthdir_y(radius, rotation_angle);
+	y = gear_y + v_spd  + sprite_height / 2;
+}
+
 if(!obj_game_manager.is_paused) {
 	check_input();
 	change_color();
 	if(state != ADD_STATES.LOST) {
 		obj_game_manager.global_speed = is_color_hud_open ? 0.25 : 1;
-		is_on_ground = place_meeting(x, y + 1, obj_ground);
+		is_on_ground = place_meeting(x, y + 1, tag_get_asset_ids("ground", asset_object));
 		if(location == COLORS.GREEN) {
 			check_green_interaction();
 		} else {
 			check_magenta_interaction();
 		}
 		if(state != ADD_STATES.JUMPING && state != ADD_STATES.LANDING && state != ADD_STATES.SQUATING 
-			&& state != ADD_STATES.STICKIED && state != ADD_STATES.SLIDING) {
+			&& state != ADD_STATES.STICKIED && state != ADD_STATES.SLIDING && state != ADD_STATES.ROTATING) {
 			move_horizontal();
 		}
 		move_vertical();
+		if(state == ADD_STATES.ROTATING) {
+			rotate_around_the_gear();
+		}
 		handle_animation();
 	}
 

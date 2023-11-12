@@ -1,6 +1,4 @@
-var _relationship = get_color_relationship(color, other.color_hue);
-
-color_interactions[? location].relationship = _relationship;
+color_interactions[? location].relationship = get_color_relationship(color, other.color_hue);
 
 color_interactions[? location].more_monochromatic =
 	color_interactions[? location].relationship == RELATIONSHIPS.MONOCHROMATIC
