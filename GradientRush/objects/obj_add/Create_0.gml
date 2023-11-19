@@ -43,6 +43,7 @@ sprite_index = spr_add_idle;
 image_speed = 1;
 image_index = 0;
 mask_index = spr_add_idle;
+image_blend = c_yellow;
 blink_time = 5;
 
 //vertical mechanics
@@ -133,3 +134,37 @@ can_interact_with_gear = true;
 has_touched_flash = false;
 can_touch_flash = true;
 flash_jump_force = 0;
+
+//sliding on strings
+string_interaction = {
+	number: 0,
+	relationship: RELATIONSHIPS.NEUTRAL,
+	const_sliding_spd: 3,
+	sliding_spd: 4,
+	h_boost: 0,
+	v_boost: 0,
+	can_jump: false,
+	can_interact: true,
+	prev_pos: 0,
+	prev_len: 0
+}
+
+//vortex
+vortex_interaction = {
+	h_boost: 0,
+	v_boost: 0,
+	can_interact: true
+}
+make_gravity_jump = function() {
+	can_jump = true;
+	green_interaction.can_jump = false;
+	can_move = false;
+	image_index = 0;
+	alarm[2] = 20;
+	max_spd = 6;
+	h_spd = vortex_interaction.h_boost;
+	v_spd = vortex_interaction.v_boost;
+	mask_index = spr_add_jump;
+	alarm[5] = 30;
+	state = ADD_STATES.MOVING;
+}

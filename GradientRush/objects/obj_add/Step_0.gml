@@ -15,22 +15,22 @@ function check_input() {
 function check_color_input() {	
 	hue = point_direction(x, y, mouse_x, mouse_y);
 	if(hue < 30 || hue >= 330) {
-		color = COLORS.RED;
+		image_blend = c_red;
 		color_wheel_image_index = 1;
 	} else if(hue >= 30 && hue < 90) {
-		color = COLORS.YELLOW;
+		image_blend = c_yellow;
 		color_wheel_image_index = 2;
 	} else if(hue >= 90 && hue < 150) {
-		color = COLORS.GREEN;
+		image_blend = c_lime;
 		color_wheel_image_index = 3;
 	} else if(hue >= 150 && hue < 210) {
-		color = COLORS.CYAN;
+		image_blend = c_aqua;
 		color_wheel_image_index = 4;
 	} else if (hue >= 210 && hue < 270) {
-		color = COLORS.BLUE;
+		image_blend = c_blue;
 		color_wheel_image_index = 5;
 	} else if (hue >= 270 && hue < 330) {
-		color = COLORS.MAGENTA;
+		image_blend = c_fuchsia;
 		color_wheel_image_index = 6;
 	}
 }
@@ -39,25 +39,27 @@ function change_color() {
 	if(is_color_hud_open) {
 		check_color_input();
 	}
-	switch(color) {
-		case COLORS.RED:
-			image_blend = c_red;
-			break;
-		case COLORS.YELLOW:
-			image_blend = c_yellow;
-			break;
-		case COLORS.GREEN:
-			image_blend = c_lime;
-			break;
-		case COLORS.CYAN:
-			image_blend = c_aqua;
-			break;
-		case COLORS.BLUE:
-			image_blend = c_blue;
-			break;
-		case COLORS.MAGENTA:
-			image_blend = c_fuchsia;
-			break;
+	if(mouse_check_button_released(1)) {
+		switch(color_wheel_image_index) {
+			case 1:
+				color = COLORS.RED;
+				break;
+			case 2:
+				color = COLORS.YELLOW;
+				break;
+			case 3:
+				color = COLORS.GREEN;
+				break;
+			case 4:
+				color = COLORS.CYAN;
+				break;
+			case 5:
+				color = COLORS.BLUE;
+				break;
+			case 6:
+				color = COLORS.MAGENTA;
+				break;
+		}
 	}
 }
 
@@ -131,11 +133,29 @@ function make_dash_from_gear() {
 		alarm[2] = 10;
 		max_spd = 6;
 		h_spd = abs(rotation_spd) * 2 * dcos(rotation_angle + 90) * sign(rotation_spd);
-		jump_force = abs(rotation_spd) * 7 * -dsin(rotation_angle + 90) * sign(rotation_spd);
+		jump_force = sign(grv) * abs(rotation_spd) * 7 * -dsin(rotation_angle + 90) * sign(rotation_spd);
 		v_spd = jump_force;
 		mask_index = spr_add_jump;
 		can_interact_with_gear = false;
 		alarm[5] = 10;
+		state = ADD_STATES.MOVING;
+	}
+}
+
+function make_dash_from_string() {
+	if(string_interaction.can_jump) {
+		string_interaction.can_jump = false;
+		green_interaction.can_jump = false;
+		state = ADD_STATES.JUMPING;
+		can_move = false;
+		image_index = 0;
+		alarm[2] = 10;
+		max_spd = 6;
+		h_spd = string_interaction.h_boost;
+		jump_force = sign(grv) * string_interaction.v_boost;
+		v_spd = jump_force;
+		mask_index = spr_add_jump;
+		alarm[5] = 20;
 		state = ADD_STATES.MOVING;
 	}
 }
@@ -160,18 +180,14 @@ function make_jump(_start_condition, _h_bust = false, is_green_inter = false) {
 		mask_index = spr_add_jump;
 		has_touched_flash = false;
 	}
-	/*if(has_touched_flash && y < yprevious - 5) {
-		has_touched_flash = false;
-		can_touch_flash = true;
-	}*/
 	if(jump && can_jump && hold_timer < 18 && !is_green_inter) {
-		v_spd -= additive_jump_force;
+		v_spd -= additive_jump_force * sign(grv);
 		additive_jump_force *= jump_force_multiplier;
-		if(v_spd < 0) {
+		if(sign(grv) == 1 && v_spd < 0 || sign(grv) == -1 && v_spd > 0) {
 			hold_timer++;
 		}
 	}
-	if(jump_end || hold_timer >= 18 || v_spd > 0) {
+	if(jump_end || hold_timer >= 18 || sign(grv) == 1 && v_spd > 0 || sign(grv) == -1 && v_spd < 0) {
 		if(!_h_bust) {
 			v_spd -= v_spd / 10;
 		}
@@ -221,7 +237,9 @@ function move_vertical() {
 			alarm[1] = 3;
 			jump_force = -5;
 			can_dash = true;
-			green_interaction.can_jump = true;
+			green_interaction.can_jump = true
+			string_interaction.prev_pos = 0;
+			string_interaction.prev_len = 0;
 		}
 		
 		if(state != ADD_STATES.LANDING) {
@@ -230,6 +248,13 @@ function move_vertical() {
 			} else {
 				make_dash_from_gear();
 			}
+			/*if(state == ADD_STATES.ROTATING) {
+				make_dash_from_gear();
+			} else if (state == ADD_STATES.ON_STRINGS) {
+				make_dash_from_string();
+			} else {
+				make_jump(jump_start && is_on_ground);
+			}*/
 		}
 		
 		if(has_touched_flash) {
@@ -241,7 +266,7 @@ function move_vertical() {
 		}
 	}
 	
-		if(v_spd < -15) {
+		if(sign(grv) == 1 && v_spd < -15 || sign(grv) == -1 && v_spd > 15) {
 			v_spd = v_spd + grv * 15 * magenta_interaction.gravity_multiplier;
 			a = 0;
 		} else if(state == ADD_STATES.SLIDING) {
@@ -250,11 +275,11 @@ function move_vertical() {
 		} else if (state == ADD_STATES.DASHING) {
 			v_spd = 0;
 			a = 2;
-		} else if(v_spd > 2) {
+		} else if(sign(grv) == 1 && v_spd > 2 || sign(grv) == -1 && v_spd < -2) {
 			v_spd = v_spd + grv * 2 * magenta_interaction.gravity_multiplier;
 			a = 3;
 		} else {
-			v_spd = v_spd < 2 && v_spd > -2 
+			v_spd = v_spd < 2 && v_spd > -2
 				? v_spd + grv / 1.5 * magenta_interaction.gravity_multiplier 
 				: v_spd + grv * magenta_interaction.gravity_multiplier;
 			a = 4;
@@ -310,7 +335,7 @@ function handle_animation() {
 		if (v_spd < 0 && state == ADD_STATES.JUMPING) {
 			sprite_index = spr_add_jump;
 			//image_speed = round(image_index) >= image_number - 1 ? 0 : 1;
-		} else if (v_spd > 0 && state != ADD_STATES.SQUATED && place_meeting(x, y + 16 + v_spd, tag_get_asset_ids("ground", asset_object))) {
+		} else if (v_spd > 0 && state != ADD_STATES.SQUATED && place_meeting(x, y + 16 * sign(grv) + v_spd, tag_get_asset_ids("ground", asset_object))) {
 			if(sprite_index != spr_add_landing) {
 				image_index = 0;
 			}
@@ -326,7 +351,7 @@ function handle_animation() {
 }
 
 function check_existance() {
-	is_active = bbox_top < room_height;
+	is_active = sign(grv) == 1 && bbox_top < room_height || sign(grv) == -1 && bbox_bottom > 0;
 	if(!is_active) {
 		state = ADD_STATES.LOST;
 		if(alarm[4] <= 0) {
@@ -349,7 +374,7 @@ function check_green_interaction() {
 				break;
 		}
 		if(state != ADD_STATES.LANDING) {
-			var _a = place_meeting(x + 1, y-5, tag_get_asset_ids("ground", asset_object)) || place_meeting(x - 1, y-5, tag_get_asset_ids("ground", asset_object));
+			var _a = place_meeting(x + 1, y - (5 * sign(grv)), tag_get_asset_ids("ground", asset_object)) || place_meeting(x - 1, y - (5 * sign(grv)), tag_get_asset_ids("ground", asset_object));
 			make_jump(is_on_ground && green_interaction.can_jump || _a, _a, true);
 		}
 	} else if(green_interaction.more_complementary) {
@@ -419,27 +444,79 @@ function rotate_around_the_gear() {
 	y = gear_y + v_spd  + sprite_height / 2;
 }
 
+function slide_on_space_strings() {
+	if(path_index == -1) {
+		state = ADD_STATES.IDLE;
+		string_interaction.prev_pos = 0;
+	} else {
+		check_color_interaction_with_strings();
+		path_speed = string_interaction.sliding_spd;
+		string_interaction.prev_pos = path_position;
+		if(string_interaction.relationship != RELATIONSHIPS.MONOCHROMATIC 
+			&& string_interaction.relationship != RELATIONSHIPS.COMPLEMENTARY) {
+			string_interaction.can_interact = false;
+			path_end();
+			make_dash_from_string();
+		}
+	}
+}
+
+function check_color_interaction_with_strings() {
+	switch(string_interaction.relationship) {
+		case RELATIONSHIPS.MONOCHROMATIC:
+			string_interaction.sliding_spd = string_interaction.const_sliding_spd;
+			string_interaction.h_boost = 0;
+			string_interaction.v_boost = 0;
+			string_interaction.can_jump = false;
+			break;
+		case RELATIONSHIPS.SPLIT_ANALOGOUS:
+			string_interaction.h_boost = string_interaction.sliding_spd * 2;
+			string_interaction.v_boost = abs(string_interaction.sliding_spd) * -5;
+			string_interaction.can_jump = true;
+			break;
+		case RELATIONSHIPS.TRIADIC:
+			string_interaction.h_boost = string_interaction.sliding_spd * 2;
+			string_interaction.v_boost = abs(string_interaction.sliding_spd) * 2;
+			string_interaction.can_jump = true;
+			break;
+		case RELATIONSHIPS.COMPLEMENTARY:
+			string_interaction.sliding_spd = -string_interaction.const_sliding_spd;
+			string_interaction.h_boost = 0;
+			string_interaction.v_boost = 0;
+			string_interaction.can_jump = false;
+			break;
+	}
+}
+
 if(!obj_game_manager.is_paused) {
 	check_input();
-	change_color();
-	if(state != ADD_STATES.LOST) {
-		obj_game_manager.global_speed = is_color_hud_open ? 0.25 : 1;
-		is_on_ground = place_meeting(x, y + 1, tag_get_asset_ids("ground", asset_object));
-		if(location == COLORS.GREEN) {
-			check_green_interaction();
-		} else {
-			check_magenta_interaction();
+	if(alarm[7] == -1) {
+		change_color();
+		if(path_index != -1) {
+			state = ADD_STATES.ON_STRINGS;
+		} else if(string_interaction.number != 0 && alarm[6] <= 0) {
+			alarm[6] = 20;
 		}
-		if(state != ADD_STATES.JUMPING && state != ADD_STATES.LANDING && state != ADD_STATES.SQUATING 
-			&& state != ADD_STATES.STICKIED && state != ADD_STATES.SLIDING && state != ADD_STATES.ROTATING) {
-			move_horizontal();
+		if(state != ADD_STATES.LOST && state != ADD_STATES.ON_STRINGS) {
+			obj_game_manager.global_speed = is_color_hud_open ? 0.25 : 1;
+			is_on_ground = place_meeting(x, y + 1 * sign(grv), tag_get_asset_ids("ground", asset_object));
+			if(location == COLORS.GREEN) {
+				check_green_interaction();
+			} else {
+				check_magenta_interaction();
+			}
+			if(state != ADD_STATES.JUMPING && state != ADD_STATES.LANDING && state != ADD_STATES.SQUATING 
+				&& state != ADD_STATES.STICKIED && state != ADD_STATES.SLIDING && state != ADD_STATES.ROTATING) {
+				move_horizontal();
+			}
+			move_vertical();
+			if(state == ADD_STATES.ROTATING) {
+				rotate_around_the_gear();
+			}
+		} else if (state == ADD_STATES.ON_STRINGS) {
+			slide_on_space_strings();
 		}
-		move_vertical();
-		if(state == ADD_STATES.ROTATING) {
-			rotate_around_the_gear();
-		}
-		handle_animation();
 	}
-
+	handle_animation();
 	check_existance();
 }
