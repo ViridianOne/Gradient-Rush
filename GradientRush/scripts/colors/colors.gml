@@ -14,3 +14,4 @@ enum COLORS {
 	GRAY = 2,
 	BLACK = 3
 }
+

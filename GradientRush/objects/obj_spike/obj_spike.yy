@@ -1,13 +1,13 @@
 {
   "resourceType": "GMObject",
   "resourceVersion": "1.0",
-  "name": "obj_color_ground",
+  "name": "obj_spike",
   "eventList": [],
   "managed": true,
   "overriddenProperties": [],
   "parent": {
-    "name": "Objects",
-    "path": "folders/Objects.yy",
+    "name": "InteractiveObjects",
+    "path": "folders/Objects/InteractiveObjects.yy",
   },
   "parentObjectId": null,
   "persistent": false,
@@ -23,14 +23,12 @@
   "physicsShape": 1,
   "physicsShapePoints": [],
   "physicsStartAwake": true,
-  "properties": [
-    {"resourceType":"GMObjectProperty","resourceVersion":"1.0","name":"color_hue","filters":[],"listItems":[],"multiselect":false,"rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"value":"2","varType":1,},
-  ],
+  "properties": [],
   "solid": false,
   "spriteId": {
-    "name": "spr_color_ground",
-    "path": "sprites/spr_color_ground/spr_color_ground.yy",
+    "name": "spr_spike",
+    "path": "sprites/spr_spike/spr_spike.yy",
   },
   "spriteMaskId": null,
-  "visible": false,
+  "visible": true,
 }

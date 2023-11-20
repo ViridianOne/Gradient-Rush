@@ -15,22 +15,16 @@ function check_input() {
 function check_color_input() {	
 	hue = point_direction(x, y, mouse_x, mouse_y);
 	if(hue < 30 || hue >= 330) {
-		image_blend = c_red;
 		color_wheel_image_index = 1;
 	} else if(hue >= 30 && hue < 90) {
-		image_blend = c_yellow;
 		color_wheel_image_index = 2;
 	} else if(hue >= 90 && hue < 150) {
-		image_blend = c_lime;
 		color_wheel_image_index = 3;
 	} else if(hue >= 150 && hue < 210) {
-		image_blend = c_aqua;
 		color_wheel_image_index = 4;
 	} else if (hue >= 210 && hue < 270) {
-		image_blend = c_blue;
 		color_wheel_image_index = 5;
 	} else if (hue >= 270 && hue < 330) {
-		image_blend = c_fuchsia;
 		color_wheel_image_index = 6;
 	}
 }
@@ -43,21 +37,27 @@ function change_color() {
 		switch(color_wheel_image_index) {
 			case 1:
 				color = COLORS.RED;
+				image_blend = c_red;
 				break;
 			case 2:
 				color = COLORS.YELLOW;
+				image_blend = c_yellow;
 				break;
 			case 3:
 				color = COLORS.GREEN;
+				image_blend = c_lime;
 				break;
 			case 4:
 				color = COLORS.CYAN;
+				image_blend = c_aqua;
 				break;
 			case 5:
 				color = COLORS.BLUE;
+				image_blend = c_blue;
 				break;
 			case 6:
 				color = COLORS.MAGENTA;
+				image_blend = c_fuchsia;
 				break;
 		}
 	}
@@ -132,8 +132,8 @@ function make_dash_from_gear() {
 		image_index = 0;
 		alarm[2] = 10;
 		max_spd = 6;
-		h_spd = abs(rotation_spd) * 2 * dcos(rotation_angle + 90) * sign(rotation_spd);
-		jump_force = sign(grv) * abs(rotation_spd) * 7 * -dsin(rotation_angle + 90) * sign(rotation_spd);
+		h_spd = abs(rotation_spd) * 3 * dcos(rotation_angle + 90) * sign(rotation_spd);
+		jump_force = sign(grv) * abs(rotation_spd) * 8 * -dsin(rotation_angle + 90) * sign(rotation_spd);
 		v_spd = jump_force;
 		mask_index = spr_add_jump;
 		can_interact_with_gear = false;
@@ -352,7 +352,7 @@ function handle_animation() {
 
 function check_existance() {
 	is_active = sign(grv) == 1 && bbox_top < room_height || sign(grv) == -1 && bbox_bottom > 0;
-	if(!is_active) {
+	if(!is_active || place_meeting(x, y, obj_spike)) {
 		state = ADD_STATES.LOST;
 		if(alarm[4] <= 0) {
 			alarm[4] = 32;

@@ -3,6 +3,8 @@ if(place_meeting(x-1, y-1, obj_add) || place_meeting(x+1, y+1, obj_add)) {
 		strength -= obj_add.green_interaction.destroying_time;
 		can_destroy = false;
 		if(strength <= 0) {
+			obj_add.green_interaction.more_complementary = false;
+			instance_destroy(color_ground);
 			instance_destroy();
 		} else {
 			alarm[0] = 60;
