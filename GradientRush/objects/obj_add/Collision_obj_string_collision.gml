@@ -10,6 +10,7 @@ if(string_interaction.number != other.string_number) {
 		_collision = instance_find(obj_string_collision, _i);
 		if(_collision != -1) {
 			_collision.color_hue = color;
+			_collision.image_blend = get_image_blend(_collision.color_hue);
 		}
 	}
 	path_start(pth_string_test, string_interaction.const_sliding_spd, path_action_stop, true);

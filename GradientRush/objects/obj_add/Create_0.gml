@@ -116,7 +116,7 @@ magenta_interaction = {
 }
 
 //location
-location = COLORS.GREEN;
+location = COLORS.MAGENTA;
 color_interactions = ds_map_create();
 ds_map_add(color_interactions, COLORS.GREEN, green_interaction);
 ds_map_add(color_interactions, COLORS.MAGENTA, magenta_interaction);

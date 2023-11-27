@@ -352,7 +352,7 @@ function handle_animation() {
 
 function check_existance() {
 	is_active = sign(grv) == 1 && bbox_top < room_height || sign(grv) == -1 && bbox_bottom > 0;
-	if(!is_active || place_meeting(x, y, obj_spike)) {
+	if(!is_active || place_meeting(x, y, obj_damage)) {
 		state = ADD_STATES.LOST;
 		if(alarm[4] <= 0) {
 			alarm[4] = 32;

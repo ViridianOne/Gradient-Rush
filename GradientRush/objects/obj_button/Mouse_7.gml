@@ -3,7 +3,7 @@ switch(interface_type) {
 		room_goto(rm_main_menu);
 		break;
 	case INTERFACE_TYPES.GAME:
-		room_goto(rm_green);
+		room_goto(rm_magenta);
 		break;
 	case INTERFACE_TYPES.CONTINUE:
 		if(instance_exists(obj_game_manager)) {
