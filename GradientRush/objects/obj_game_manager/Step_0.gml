@@ -5,4 +5,11 @@ if(keyboard_check_pressed(vk_escape)) {
 	global_speed = is_paused ? 0 : 1;
 }
 
-
+switch(location) {
+	case 120:
+		obj_add.location = COLORS.GREEN;
+		break;
+	case 300:
+		obj_add.location = COLORS.MAGENTA;
+		break;
+}

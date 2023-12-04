@@ -179,8 +179,10 @@ function make_jump(_start_condition, _h_bust = false, is_green_inter = false) {
 		alarm[0] = has_touched_flash ? 1 : 3;
 		mask_index = spr_add_jump;
 		has_touched_flash = false;
+		can_hold_jump_after_attack = can_jump_after_attack;
+		can_jump_after_attack = false;
 	}
-	if(jump && can_jump && hold_timer < 18 && !is_green_inter) {
+	if((jump || can_hold_jump_after_attack) && can_jump && hold_timer < 18 && !is_green_inter) {
 		v_spd -= additive_jump_force * sign(grv);
 		additive_jump_force *= jump_force_multiplier;
 		if(sign(grv) == 1 && v_spd < 0 || sign(grv) == -1 && v_spd > 0) {
@@ -244,17 +246,10 @@ function move_vertical() {
 		
 		if(state != ADD_STATES.LANDING) {
 			if(state != ADD_STATES.ROTATING && !green_interaction.more_monochromatic) {
-				make_jump(jump_start && is_on_ground);
+				make_jump(jump_start && is_on_ground || can_jump_after_attack);
 			} else {
 				make_dash_from_gear();
 			}
-			/*if(state == ADD_STATES.ROTATING) {
-				make_dash_from_gear();
-			} else if (state == ADD_STATES.ON_STRINGS) {
-				make_dash_from_string();
-			} else {
-				make_jump(jump_start && is_on_ground);
-			}*/
 		}
 		
 		if(has_touched_flash) {
@@ -352,7 +347,7 @@ function handle_animation() {
 
 function check_existance() {
 	is_active = sign(grv) == 1 && bbox_top < room_height || sign(grv) == -1 && bbox_bottom > 0;
-	if(!is_active || place_meeting(x, y, obj_damage)) {
+	if(!is_active || place_meeting(x, y, obj_damage) || is_damaged) {
 		state = ADD_STATES.LOST;
 		if(alarm[4] <= 0) {
 			alarm[4] = 32;

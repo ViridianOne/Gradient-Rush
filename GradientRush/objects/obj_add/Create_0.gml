@@ -5,14 +5,6 @@ jump_btn = vk_space;
 squat_btn = ord("S");
 dash_btn = vk_shift;
 
-//test color buttons
-red_btn = ord("I");
-yellow_btn = ord("O");
-green_btn = ord("L");
-cyan_btn = ord("K");
-blue_btn = ord("J");
-magenta_btn = ord("U");
-
 //inputs
 left = false;
 right = false;
@@ -66,6 +58,9 @@ is_wall_left = false;
 
 //existance
 is_active = true;
+is_damaged = false;
+can_jump_after_attack = false;
+can_hold_jump_after_attack = false;
 
 //blinks
 /*add_blink = ds_map_create();

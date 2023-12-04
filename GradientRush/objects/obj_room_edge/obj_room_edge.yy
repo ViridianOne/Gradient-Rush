@@ -36,5 +36,5 @@
     "path": "sprites/spr_room_edge/spr_room_edge.yy",
   },
   "spriteMaskId": null,
-  "visible": true,
+  "visible": false,
 }
