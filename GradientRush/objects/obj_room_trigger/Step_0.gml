@@ -20,7 +20,7 @@ function move_camera_vertically() {
 
 is_player_inside = place_meeting(x, y, obj_add)
 
-if(is_player_inside) {
+if(is_player_inside && !obj_game_manager.is_paused) {
 	/*if(obj_add.x > x + camera_get_view_width(cam) / 4 && obj_add.x <  x + sprite_width - camera_get_view_width(cam) / 4) {
 		obj_camera_point.x = obj_add.x;
 	} else {

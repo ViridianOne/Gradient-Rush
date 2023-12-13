@@ -4,9 +4,8 @@ function change_gravity(_h_boost, _v_boost) {
 		vortex_interaction.v_boost = _v_boost;
 		vortex_interaction.can_interact = false;
 		alarm[7] = 60;
-		grv *= -1;
+		grv = 0.5 * sign(grv) * -1;
 		image_yscale *= -1;
-		obj_spacetime_vortex.down_boost *= -1;
 		color += color < 180 ? 180 : -180;
 		switch(color) {
 				case 0:
@@ -35,6 +34,7 @@ function change_gravity(_h_boost, _v_boost) {
 					break;
 			}
 	}
+	down_boost *= -1;
 }
 
 if(obj_add.vortex_interaction.can_interact && place_meeting(x, y, obj_add)) {

@@ -131,7 +131,7 @@ if(!obj_game_manager.is_paused) {
 			&& obj_add.y >= run_border_up && obj_add.y <= run_border_down;
 
 		if(can_move) {
-			if(bbox_bottom <= other.bbox_top + 20) {
+			if(obj_add.bbox_bottom >= bbox_top + 20) {
 				can_dash = able_to_dash && (obj_add.x > x + punch_border_right && obj_add.x < x + dash_border_left 
 					|| obj_add.x <= x - punch_border_right && obj_add.x > x - dash_border_left); 
 				can_punch = obj_add.x > x + sprite_width / 2 && obj_add.x <= x + punch_border_right 

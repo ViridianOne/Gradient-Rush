@@ -3,7 +3,7 @@ if(string_interaction.number != other.string_number) {
 		path_change_point(pth_string_test, _i, other.x_points[_i], other.y_points[_i], 100);
 	}*/
 	string_interaction.number = other.string_number;
-	obj_game_manager.obj_speed_relativity = 0;
+	//obj_game_manager.obj_speed_relativity = 0;
 	var _collisions_number = instance_number(obj_string_collision);
 	var _collision = noone;
 	for(var _i = 0; _i < _collisions_number; _i++) {

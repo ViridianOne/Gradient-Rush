@@ -163,3 +163,6 @@ make_gravity_jump = function() {
 	alarm[5] = 30;
 	state = ADD_STATES.MOVING;
 }
+
+//bossfight
+is_on_first_path = true;

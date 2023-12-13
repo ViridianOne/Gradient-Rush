@@ -418,7 +418,7 @@ function check_magenta_interaction() {
 				magenta_interaction.speed_relativity = magenta_interaction.low_gravity;
 				break;
 		}
-		obj_game_manager.obj_speed_relativity = magenta_interaction.normal_gravity;
+		obj_game_manager.obj_speed_relativity = magenta_interaction.gravity_multiplier;
 	} else {
 		magenta_interaction.gravity_multiplier =  magenta_interaction.normal_gravity;
 		magenta_interaction.speed_relativity = magenta_interaction.normal_gravity;
@@ -466,11 +466,11 @@ function check_color_interaction_with_strings() {
 			break;
 		case RELATIONSHIPS.SPLIT_ANALOGOUS:
 			string_interaction.h_boost = string_interaction.sliding_spd * 2;
-			string_interaction.v_boost = abs(string_interaction.sliding_spd) * -5;
+			string_interaction.v_boost = abs(string_interaction.sliding_spd) * -10;
 			string_interaction.can_jump = true;
 			break;
 		case RELATIONSHIPS.TRIADIC:
-			string_interaction.h_boost = string_interaction.sliding_spd * 2;
+			string_interaction.h_boost = string_interaction.sliding_spd * -2;
 			string_interaction.v_boost = abs(string_interaction.sliding_spd) * 2;
 			string_interaction.can_jump = true;
 			break;
