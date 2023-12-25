@@ -28,3 +28,7 @@ damage_boss = function() {
 		image_index = 0;
 	}
 }
+
+//attraction
+h_border = 168;
+v_border = 168;

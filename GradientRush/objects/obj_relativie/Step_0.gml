@@ -87,6 +87,15 @@ function start_bossfight() {
 	}
 }
 
+function attract_player() {
+	if(obj_add.x > x - h_border && obj_add.x < x + h_border && obj_add.y > y - v_border && obj_add.y < y + v_border) {
+		obj_add.speed = 4;
+		obj_add.direction = point_direction(obj_add.x, obj_add.y, x, y);
+		obj_add.can_move = false;
+		obj_add.can_jump = false;
+	}
+}
+
 if(state != BOSSES_STATES.DEAD) {
 	if(hp <= 0) {
 		state = BOSSES_STATES.DEAD;
@@ -111,6 +120,10 @@ if(state != BOSSES_STATES.DEAD) {
 		spd = 4;
 	} else {
 		spd = 1.5;
+	}
+	
+	if(hp < 5 && hp > 0) {
+		attract_player();
 	}
 }
 

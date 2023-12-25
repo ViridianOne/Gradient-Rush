@@ -4,7 +4,10 @@ function change_gravity(_h_boost, _v_boost) {
 		vortex_interaction.v_boost = _v_boost;
 		vortex_interaction.can_interact = false;
 		alarm[7] = 60;
-		grv = 0.5 * sign(grv) * -1;
+		magenta_interaction.gravity_multiplier =  magenta_interaction.normal_gravity;
+		magenta_interaction.speed_relativity = magenta_interaction.normal_gravity;
+		obj_game_manager.obj_speed_relativity = magenta_interaction.normal_gravity;
+		//grv = 0.5 * sign(grv) * -1;
 		image_yscale *= -1;
 		color += color < 180 ? 180 : -180;
 		switch(color) {
@@ -34,7 +37,6 @@ function change_gravity(_h_boost, _v_boost) {
 					break;
 			}
 	}
-	down_boost *= -1;
 }
 
 if(obj_add.vortex_interaction.can_interact && place_meeting(x, y, obj_add)) {
@@ -44,7 +46,7 @@ if(obj_add.vortex_interaction.can_interact && place_meeting(x, y, obj_add)) {
 		}
 	} else {
 		if(bbox_top <= obj_add.bbox_bottom || bbox_bottom >= obj_add.bbox_top) {
-			change_gravity(0, down_boost);
+			change_gravity(0, down_boost * sign(obj_add.grv));
 		}
 	}
 }

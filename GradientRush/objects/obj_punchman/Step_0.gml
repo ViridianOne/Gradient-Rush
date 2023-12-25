@@ -1,28 +1,29 @@
+function attack() {
+	if(state != ADD_STATES.PUNCHING && state != ADD_STATES.DASHING && state != ADD_STATES.REACTION) {
+		state = ADD_STATES.REACTION;
+		if(alarm[4] < 0) {
+			alarm[4] = 90;
+		}
+	}
+}
+
 function make_punch() {
-	if(can_punch && state != ADD_STATES.PUNCHING && state != ADD_STATES.DASHING) {
-		image_xscale = sign(obj_add.x - x);
-		state = ADD_STATES.PUNCHING;
-		h_spd = max_spd * sign(image_xscale);
-		can_punch = false;
-		run_direction = 0;
-		can_damage_player = true;
-		alarm[1] = 32;
-		obj_add.is_damaged = get_color_relationship(color, obj_add.color) != RELATIONSHIPS.MONOCHROMATIC;
+	if(can_punch && state != ADD_STATES.PUNCHING 
+		&& state != ADD_STATES.DASHING && state != ADD_STATES.REACTION) {
+		state = ADD_STATES.REACTION;
+		if(alarm[4] < 0) {
+			alarm[4] = 100;
+		}
 	}
 }
 
 function make_dash() {
-	if(can_dash && state != ADD_STATES.DASHING && state != ADD_STATES.PUNCHING) {
-		image_xscale = sign(obj_add.x - x);
-		state = ADD_STATES.DASHING;
-		max_spd = 15;
-		h_spd = max_spd * sign(image_xscale);
-		decceleration = 0.05;
-		can_dash = is_on_ground;
-		additive_jump_force = 1.5;
-		run_direction = 0;
-		able_to_dash = false;
-		alarm[3] = 64;
+	if(can_dash && state != ADD_STATES.DASHING 
+		&& state != ADD_STATES.PUNCHING && state != ADD_STATES.REACTION) {
+		state = ADD_STATES.REACTION;
+		if(alarm[4] < 0) {
+			alarm[4] = 100;
+		}
 	}
 }
 
@@ -46,10 +47,11 @@ function check_v_collision() {
 
 function move_horizontal() {
 	if(can_move) {
-		make_dash();
-		make_punch();
+		//make_dash();
+		//make_punch();
+		attack();
 		if(run_direction != 0 && (sign(h_spd) == sign(run_direction) || h_spd == 0 || !is_on_ground) 
-			&& state != ADD_STATES.DASHING && state != ADD_STATES.PUNCHING) {
+			&& state != ADD_STATES.DASHING && state != ADD_STATES.PUNCHING && state != ADD_STATES.REACTION) {
 			spd += max_spd * acceleration;
 			if(spd >= max_spd) {
 				spd = max_spd;
@@ -120,6 +122,8 @@ function handle_animation() {
 		sprite_index = spr_punchman_falling;
 	} else if(state == ADD_STATES.LOST) {
 		sprite_index = spr_punchman_death;
+	} else if(state == ADD_STATES.REACTION) {
+		sprite_index = spr_punchman_reaction;
 	} else {
 		sprite_index = spr_punchman_idle;
 	}

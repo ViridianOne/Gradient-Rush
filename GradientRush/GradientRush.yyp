@@ -47,7 +47,7 @@
   "isEcma": false,
   "LibraryEmitters": [],
   "MetaData": {
-    "IDEVersion": "2023.11.0.121",
+    "IDEVersion": "2023.11.1.129",
   },
   "resources": [
     {"id":{"name":"pendulum_direction","path":"scripts/pendulum_direction/pendulum_direction.yy",},},
@@ -107,6 +107,7 @@
     {"id":{"name":"spr_magenta_tiles","path":"sprites/spr_magenta_tiles/spr_magenta_tiles.yy",},},
     {"id":{"name":"pth_relativie_5","path":"paths/pth_relativie_5/pth_relativie_5.yy",},},
     {"id":{"name":"spr_spike","path":"sprites/spr_spike/spr_spike.yy",},},
+    {"id":{"name":"spr_punchman_reaction","path":"sprites/spr_punchman_reaction/spr_punchman_reaction.yy",},},
     {"id":{"name":"spr_room_edge","path":"sprites/spr_room_edge/spr_room_edge.yy",},},
     {"id":{"name":"spr_ground","path":"sprites/spr_ground/spr_ground.yy",},},
     {"id":{"name":"ts_green_1","path":"tilesets/ts_green_1/ts_green_1.yy",},},
@@ -157,6 +158,7 @@
     {"id":{"name":"obj_camera_point","path":"objects/obj_camera_point/obj_camera_point.yy",},},
     {"id":{"name":"spr_button","path":"sprites/spr_button/spr_button.yy",},},
     {"id":{"name":"spr_punchman_punch","path":"sprites/spr_punchman_punch/spr_punchman_punch.yy",},},
+    {"id":{"name":"spr_bg_relativie","path":"sprites/spr_bg_relativie/spr_bg_relativie.yy",},},
     {"id":{"name":"spr_tusk_showing_spikes","path":"sprites/spr_tusk_showing_spikes/spr_tusk_showing_spikes.yy",},},
     {"id":{"name":"spr_flask","path":"sprites/spr_flask/spr_flask.yy",},},
     {"id":{"name":"rm_main_menu","path":"rooms/rm_main_menu/rm_main_menu.yy",},},
@@ -173,6 +175,7 @@
     {"id":{"name":"obj_color_ground","path":"objects/obj_color_ground/obj_color_ground.yy",},},
     {"id":{"name":"obj_game_manager","path":"objects/obj_game_manager/obj_game_manager.yy",},},
     {"id":{"name":"obj_player_detector","path":"objects/obj_player_detector/obj_player_detector.yy",},},
+    {"id":{"name":"spr_bg_main_menu","path":"sprites/spr_bg_main_menu/spr_bg_main_menu.yy",},},
     {"id":{"name":"pth_relativie_14","path":"paths/pth_relativie_14/pth_relativie_14.yy",},},
     {"id":{"name":"obj_flash","path":"objects/obj_flash/obj_flash.yy",},},
     {"id":{"name":"obj_gear","path":"objects/obj_gear/obj_gear.yy",},},

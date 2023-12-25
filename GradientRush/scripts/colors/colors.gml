@@ -31,3 +31,20 @@ function get_image_blend(_color) {
 			return c_fuchsia;
 	}
 }
+
+function get_tint_array(_color) {
+	switch(_color) {
+		case COLORS.RED:
+			return [1, 0.5, 0.5, 1];
+		case COLORS.YELLOW:
+			return [1, 1, 0, 1];
+		case COLORS.GREEN:
+			return [0.5, 1, 0.5, 1];
+		case COLORS.CYAN:
+			return [0, 1, 1, 1];
+		case COLORS.BLUE:
+			return [0.5, 0.5, 1, 1];
+		case COLORS.MAGENTA:
+			return [1, 0, 1, 1];
+	}
+}

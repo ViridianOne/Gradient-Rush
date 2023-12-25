@@ -1,0 +1,10 @@
+image_xscale = sign(obj_add.x - x);
+state = ADD_STATES.DASHING;
+max_spd = 15;
+h_spd = max_spd * sign(image_xscale);
+decceleration = 0.05;
+can_dash = is_on_ground;
+additive_jump_force = 1.5;
+run_direction = 0;
+able_to_dash = false;
+alarm[3] = 64;

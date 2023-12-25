@@ -40,5 +40,5 @@
     "path": "sprites/spr_string_collision/spr_string_collision.yy",
   },
   "spriteMaskId": null,
-  "visible": true,
+  "visible": false,
 }

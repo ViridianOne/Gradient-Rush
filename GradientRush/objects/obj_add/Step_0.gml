@@ -260,24 +260,25 @@ function move_vertical() {
 			make_squat();
 		}
 	}
-	
-		if(sign(grv) == 1 && v_spd < -15 || sign(grv) == -1 && v_spd > 15) {
-			v_spd = v_spd + grv * 15 * magenta_interaction.gravity_multiplier;
-			a = 0;
-		} else if(state == ADD_STATES.SLIDING) {
-			v_spd = v_spd + grv / 2 * magenta_interaction.gravity_multiplier;
-			a = 1;
-		} else if (state == ADD_STATES.DASHING) {
-			v_spd = 0;
-			a = 2;
-		} else if(sign(grv) == 1 && v_spd > 2 || sign(grv) == -1 && v_spd < -2) {
-			v_spd = v_spd + grv * 2 * magenta_interaction.gravity_multiplier;
-			a = 3;
-		} else {
-			v_spd = v_spd < 2 && v_spd > -2
-				? v_spd + grv / 1.5 * magenta_interaction.gravity_multiplier 
-				: v_spd + grv * magenta_interaction.gravity_multiplier;
-			a = 4;
+		if(vortex_interaction.can_interact) {
+			if(sign(grv) == 1 && v_spd < -15 || sign(grv) == -1 && v_spd > 15) {
+				v_spd = v_spd + grv * 15 * magenta_interaction.gravity_multiplier;
+				a = 0;
+			} else if(state == ADD_STATES.SLIDING) {
+				v_spd = v_spd + grv / 2 * magenta_interaction.gravity_multiplier;
+				a = 1;
+			} else if (state == ADD_STATES.DASHING) {
+				v_spd = 0;
+				a = 2;
+			} else if(sign(grv) == 1 && v_spd > 2 || sign(grv) == -1 && v_spd < -2) {
+				v_spd = v_spd + grv * 2 * magenta_interaction.gravity_multiplier;
+				a = 3;
+			} else {
+				v_spd = v_spd < 2 && v_spd > -2
+					? v_spd + grv / 1.5 * magenta_interaction.gravity_multiplier 
+					: v_spd + grv * magenta_interaction.gravity_multiplier;
+				a = 4;
+			}
 		}
 	
 	if(!is_on_ground && state != ADD_STATES.JUMPING && (place_meeting(x + 1, y, tag_get_asset_ids("ground", asset_object)) && right || place_meeting(x - 1, y, tag_get_asset_ids("ground", asset_object)) && left)) {
@@ -445,7 +446,7 @@ function slide_on_space_strings() {
 		string_interaction.prev_pos = 0;
 	} else {
 		check_color_interaction_with_strings();
-		path_speed = string_interaction.sliding_spd;
+		path_speed = string_interaction.sliding_spd * string_interaction.is_horizontal ? sign(image_xscale) : sign(v_spd);
 		string_interaction.prev_pos = path_position;
 		if(string_interaction.relationship != RELATIONSHIPS.MONOCHROMATIC 
 			&& string_interaction.relationship != RELATIONSHIPS.COMPLEMENTARY) {
@@ -454,6 +455,84 @@ function slide_on_space_strings() {
 			make_dash_from_string();
 		}
 	}
+	/*string_interaction.can_interact = place_meeting(x, y, obj_string_collision);
+	if(string_interaction.can_interact) {
+		var _more_monochromatic = string_interaction.relationship == RELATIONSHIPS.MONOCHROMATIC 
+			|| string_interaction.relationship == RELATIONSHIPS.ANALOGOUS 
+			|| string_interaction.relationship == RELATIONSHIPS.SPLIT_ANALOGOUS;
+		x += _more_monochromatic ? h_spd : -h_spd;
+		y += _more_monochromatic ? v_spd : -v_spd;
+		check_color_interaction_with_strings();
+	} /*else if(state == ADD_STATES.ON_STRINGS) {
+		state = ADD_STATES.IDLE;
+	}*/
+	/*var _string = collision_rectangle(x - 32, y, x + 32, y - 64, obj_string_collision, false, false);
+	//string_interaction.current_string = collision_rectangle(x - 32, y, x + 32, y - 64, obj_string_collision, false, false);
+	
+	if(_string) {
+		state = ADD_STATES.ON_STRINGS;
+		string_interaction.relationship = get_color_relationship(_string.color_hue, color);
+		string_interaction.prev_pos += 1;
+
+	if(string_interaction.number != _string.string_number) {
+		string_interaction.number = _string.string_number;
+		var _collisions_number = instance_number(obj_string_collision);
+		var _collision = noone;
+		for(var _i = 0; _i < _collisions_number; _i++) {
+			_collision = instance_find(obj_string_collision, _i);
+			if(_collision != -1) {
+				_collision.color_hue = color;
+				_collision.image_blend = get_image_blend(_collision.color_hue);
+			}
+		}
+	} else if(x > string_interaction.next_x_point - 3 && x < string_interaction.next_x_point + 3
+		|| y > string_interaction.next_y_point - 3 && y < string_interaction.next_y_point + 3
+		|| string_interaction.next_x_point == -1 && string_interaction.next_y_point == -1) {
+		for(var _i = 1; _i < array_length(_string.x_points); _i++) {
+			string_interaction.x_cond = _string.x_points[_i - 1] - _string.x_points[_i] < 0 
+				&& x >= _string.x_points[_i - 1] && x < _string.x_points[_i];
+			if(_string.x_points[_i - 1] - _string.x_points[_i] < 0 
+				&& x >= _string.x_points[_i - 1] && x < _string.x_points[_i]) {
+			h_spd = string_interaction.const_sliding_spd;
+			string_interaction.next_x_point = _string.x_points[_i];
+			y = _string.y_points[_i];
+			break;
+		} else if (_string.x_points[_i - 1] - _string.x_points[_i] > 0 
+			&& x >= _string.x_points[_i] && x < _string.x_points[_i - 1]) {
+			h_spd = -string_interaction.const_sliding_spd;
+			string_interaction.next_x_point = _string.x_points[_i];
+			y = _string.y_points[_i];
+			break;
+		} else {
+			h_spd = 0;
+			string_interaction.next_x_point = -1;
+		}
+		
+		string_interaction.y_cond = _string.y_points[_i - 1] - _string.y_points[_i] < 0 
+			&& y >= _string.y_points[_i - 1] && y < _string.y_points[_i];
+		if(_string.y_points[_i - 1] - _string.y_points[_i] < 0 
+			&& y >= _string.y_points[_i - 1] && y < _string.y_points[_i]) {
+			v_spd = string_interaction.const_sliding_spd;
+			string_interaction.next_y_point = _string.y_points[_i];
+			x = _string.x_points[_i];
+			break;
+		} else if (_string.y_points[_i - 1] - _string.y_points[_i] > 0 
+			&& y >= _string.y_points[_i] && y < _string.y_points[_i - 1]) {
+			v_spd = -string_interaction.const_sliding_spd;
+			string_interaction.next_y_point = _string.y_points[_i];
+			x = _string.x_points[_i];
+			break;
+		} else {
+			v_spd = 0;
+			string_interaction.next_y_point = -1;
+		}
+		
+	}
+}
+
+		x += h_spd * obj_game_manager.global_speed;
+		y += v_spd * obj_game_manager.global_speed;
+	}*/
 }
 
 function check_color_interaction_with_strings() {
@@ -511,6 +590,7 @@ if(!obj_game_manager.is_paused) {
 		} else if (state == ADD_STATES.ON_STRINGS) {
 			slide_on_space_strings();
 		}
+		//slide_on_space_strings();
 	}
 	handle_animation();
 	check_existance();
