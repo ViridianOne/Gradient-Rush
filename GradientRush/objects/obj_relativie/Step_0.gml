@@ -10,6 +10,9 @@ function handle_animation() {
 				is_starting = true;
 				image_index = 0;
 			}
+			if(!audio_is_playing(snd_relativie_laughter)) {
+				audio_play_sound(snd_relativie_laughter, 3, false);
+			}
 			break;
 		case BOSSES_STATES.STARTING:
 			sprite_index = spr_relativie_start;
@@ -63,6 +66,9 @@ function handle_animation() {
 						state = BOSSES_STATES.ATTACK;
 					}
 					break;
+			}
+			if(!audio_is_playing(snd_relativie_damage)) {
+				audio_play_sound(snd_relativie_damage, 3, false);
 			}
 			break;
 		case BOSSES_STATES.DEAD:
@@ -122,7 +128,8 @@ if(state != BOSSES_STATES.DEAD) {
 		spd = 1.5;
 	}
 	
-	if(hp < 5 && hp > 0) {
+	can_attract_player = hp < 5 && hp > 0 && state != BOSSES_STATES.REACTION && state != BOSSES_STATES.STARTING;
+	if(can_attract_player) {
 		attract_player();
 	}
 }

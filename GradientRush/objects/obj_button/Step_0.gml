@@ -1,11 +1,14 @@
 if(point_in_rectangle(window_mouse_get_x(), window_mouse_get_y(), bbox_left, bbox_top, bbox_right, bbox_bottom)) {
+	if(mouse_check_button_pressed(mb_left)) {
+		audio_play_sound(snd_click, 1, false);
+	}
 	if(mouse_check_button_released(mb_left)) {
 		switch(interface_type) {
 			case INTERFACE_TYPES.MAIN:
 				room_goto(rm_main_menu);
 				break;
 			case INTERFACE_TYPES.GAME:
-				room_goto(rm_magenta);
+				room_goto(rm_relativie);
 				break;
 			case INTERFACE_TYPES.CONTINUE:
 				if(instance_exists(obj_game_manager)) {

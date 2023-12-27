@@ -50,3 +50,5 @@ if(obj_add.vortex_interaction.can_interact && place_meeting(x, y, obj_add)) {
 		}
 	}
 }
+
+audio_listener_position(obj_add.x, obj_add.y, 0);

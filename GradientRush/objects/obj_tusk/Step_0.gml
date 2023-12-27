@@ -108,6 +108,34 @@ function handle_animation() {
 	}
 }
 
+function handle_sound() {
+	if(state == ADD_STATES.LOST && !audio_is_playing(snd_add_death)) {
+		audio_play_sound_at(snd_add_death, x, y, 0, obj_game_manager.fallof_max, obj_game_manager.fallof_factor, 1, false, 4);
+		audio_stop_sound(snd_tusk_step);
+		audio_stop_sound(snd_tusk_running);
+	} else if(state == ADD_STATES.MOVING && !audio_is_playing(snd_tusk_step)) {
+		audio_play_sound_at(snd_tusk_step, x, y, 0, obj_game_manager.fallof_max, obj_game_manager.fallof_factor, 1, true, 4);
+		audio_stop_sound(snd_tusk_running);
+	} else if(can_roar && state == ADD_STATES.RUSHING && !audio_is_playing(snd_tusk_running)) {
+		//audio_play_sound_at(snd_tusk_roar, x, y, 0, obj_game_manager.fallof_max, obj_game_manager.fallof_factor, 1, false, 4);
+		audio_play_sound_at(snd_tusk_running, x, y, 0, obj_game_manager.fallof_max, obj_game_manager.fallof_factor, 1, true, 4);
+		audio_stop_sound(snd_tusk_step);
+	} else if(state == ADD_STATES.HIDING_SPIKES && !audio_is_playing(snd_tusk_spikes_hiding)) {
+		audio_play_sound_at(snd_tusk_spikes_hiding, x, y, 0, obj_game_manager.fallof_max, obj_game_manager.fallof_factor, 1, false, 4);
+		audio_stop_sound(snd_tusk_step);
+		audio_stop_sound(snd_tusk_running);
+	} else if(state == ADD_STATES.SHOWING_SPIKES && !audio_is_playing(snd_tusk_spikes_showing)) {
+		audio_play_sound_at(snd_tusk_spikes_showing, x, y, 0, obj_game_manager.fallof_max, obj_game_manager.fallof_factor, 1, false, 4);
+		audio_stop_sound(snd_tusk_step);
+		audio_stop_sound(snd_tusk_running);
+	} else {
+		audio_stop_sound(snd_tusk_step);
+		audio_stop_sound(snd_tusk_running);
+	}
+	audio_listener_position(obj_add.x, obj_add.y, 0);
+	can_roar = state != ADD_STATES.RUSHING;
+}
+
 if(!obj_game_manager.is_paused) {
 	if(state != ADD_STATES.LOST) {
 		if(alarm[1] <= 0) {
@@ -115,7 +143,10 @@ if(!obj_game_manager.is_paused) {
 		}
 		
 		if(alarm[2] <= 0) {
-			alarm[2] = is_with_spikes ? 360 : 180;
+			alarm[2] = is_with_spikes ? 180 : 360;
+			if(!is_with_spikes) {
+				//audio_play_sound_at(snd_tusk_roar, x, y, 0, obj_game_manager.fallof_max, obj_game_manager.fallof_factor, 1, false, 4);
+			}
 		}
 
 		can_rush = obj_add.y >= player_detector_up && obj_add.y <= player_detector_down 
@@ -147,6 +178,6 @@ if(!obj_game_manager.is_paused) {
 		move_vertical();
 	}
 	handle_animation();
-
+	handle_sound();
 	check_existance();
 }

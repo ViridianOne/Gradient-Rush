@@ -32,3 +32,5 @@ damage_boss = function() {
 //attraction
 h_border = 168;
 v_border = 168;
+can_attract_player = false;
+prt = part_system_create(prt_relativie);

@@ -32,6 +32,7 @@ can_jump = false;
 can_rush = false;
 rush_spd = 6;
 rush_damage_right_border = 16;
+can_roar = true;
 
 //spikes
 is_with_spikes = true;
@@ -44,3 +45,6 @@ is_damaged = false;
 //color interaction
 color = COLORS.YELLOW;
 relationship = RELATIONSHIPS.NEUTRAL;
+
+audio_listener_orientation(0, 1, 0, 0, 0, 1);
+audio_falloff_set_model(audio_falloff_exponent_distance);

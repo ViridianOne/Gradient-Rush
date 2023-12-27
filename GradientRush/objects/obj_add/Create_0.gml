@@ -135,6 +135,7 @@ string_interaction = {
 	current_string: noone,
 	number: 0,
 	relationship: RELATIONSHIPS.NEUTRAL,
+	prev_relationship: RELATIONSHIPS.NEUTRAL,
 	const_sliding_spd: 3,
 	sliding_spd: 4,
 	h_boost: 0,
@@ -145,7 +146,10 @@ string_interaction = {
 	prev_len: 0,
 	next_x_point: -1,
 	next_y_point: -1,
-	is_horizontal: false
+	is_horizontal: false,
+	a: 0,
+	b: 0,
+	spd_multiplier: 1
 }
 
 string_color_fx = fx_create("_filter_colourise");
@@ -175,3 +179,6 @@ make_gravity_jump = function() {
 
 //bossfight
 is_on_first_path = true;
+
+//squat
+can_make_squat_snd = true;

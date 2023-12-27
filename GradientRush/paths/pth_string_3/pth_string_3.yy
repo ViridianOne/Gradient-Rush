@@ -3,7 +3,7 @@
   "resourceVersion": "1.0",
   "name": "pth_string_3",
   "closed": false,
-  "kind": 1,
+  "kind": 0,
   "parent": {
     "name": "Paths",
     "path": "folders/Paths.yy",

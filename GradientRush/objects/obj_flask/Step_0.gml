@@ -9,3 +9,5 @@ if(is_thrown) {
 	x += obj_add.x - obj_add.xprevious;
 	y += obj_add.y - obj_add.yprevious;
 }
+
+audio_listener_position(obj_add.x, obj_add.y, 0);
