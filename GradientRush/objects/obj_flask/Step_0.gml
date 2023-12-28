@@ -8,6 +8,9 @@ if(is_thrown) {
 } else if(is_grabbed) {
 	x += obj_add.x - obj_add.xprevious;
 	y += obj_add.y - obj_add.yprevious;
+} else if(is_broken) {
+	x = obj_relativie.x;
+	y = obj_relativie.y;
 }
 
 audio_listener_position(obj_add.x, obj_add.y, 0);

@@ -95,6 +95,11 @@ function start_bossfight() {
 
 function attract_player() {
 	if(obj_add.x > x - h_border && obj_add.x < x + h_border && obj_add.y > y - v_border && obj_add.y < y + v_border) {
+		obj_add.magenta_interaction.can_use = false;
+		obj_add.magenta_interaction.is_active = false;
+		obj_add.magenta_interaction.gravity_multiplier = obj_add.magenta_interaction.normal_gravity;
+		obj_add.magenta_interaction.speed_relativity = obj_add.magenta_interaction.normal_gravity;
+		obj_game_manager.obj_speed_relativity = obj_add.magenta_interaction.normal_gravity;
 		obj_add.speed = 4;
 		obj_add.direction = point_direction(obj_add.x, obj_add.y, x, y);
 		obj_add.can_move = false;
@@ -123,9 +128,9 @@ if(state != BOSSES_STATES.DEAD) {
 	}
 	
 	if(obj_add.x - x >= 768) {
-		spd = 4;
+		spd = 3;
 	} else {
-		spd = 1.5;
+		spd = 1;
 	}
 	
 	can_attract_player = hp < 5 && hp > 0 && state != BOSSES_STATES.REACTION && state != BOSSES_STATES.STARTING;

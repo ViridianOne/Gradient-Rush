@@ -1,8 +1,11 @@
 rotation_radius = 64;
 rotation_spd = 8;
 
-color = COLORS.GREEN;
-image_blend = c_green;
+if(color == COLORS.GREEN) {
+	sprite_index = spr_gear_green;
+} else if(color == COLORS.RED) {
+	sprite_index = spr_gear_red;
+}
 
 color_interaction = {
 	monochromatic: -1,

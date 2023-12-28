@@ -107,7 +107,8 @@ magenta_interaction = {
 	very_strong_gravity: 3,
 	max_gravity: 4,
 	speed_relativity: 1,
-	gravity_multiplier: 1
+	gravity_multiplier: 1,
+	can_use: true
 }
 
 //location
@@ -167,7 +168,7 @@ make_gravity_jump = function() {
 	green_interaction.can_jump = false;
 	can_move = false;
 	image_index = 0;
-	grv = 0.5 * -sign(grv);
+	grv = 2 * -sign(grv);
 	alarm[2] = 20;
 	max_spd = 6;
 	h_spd = vortex_interaction.h_boost;

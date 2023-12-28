@@ -36,7 +36,7 @@ if(is_player_inside && !obj_game_manager.is_paused) {
 		move_camera_vertically();
 		can_move_camera = false;
 		can_camera_move_with_player = true;
-	} else if(can_camera_move_with_player) {
+	} else if(can_camera_move_with_player && obj_add.state != ADD_STATES.LOST) {
 		if(obj_add.x > x + camera_get_view_width(cam) / 2 && obj_add.x <  x + sprite_width - camera_get_view_width(cam) / 2) {
 			obj_camera_point.x = obj_add.x;
 		}

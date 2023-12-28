@@ -43,7 +43,6 @@ is_active = true;
 is_damaged = false;
 
 //color interaction
-color = COLORS.YELLOW;
 relationship = RELATIONSHIPS.NEUTRAL;
 
 audio_listener_orientation(0, 1, 0, 0, 0, 1);

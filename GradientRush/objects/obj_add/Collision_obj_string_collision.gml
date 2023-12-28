@@ -49,7 +49,13 @@ if(string_interaction.number != other.string_number) {
 	//path_assign(path_index, other.string_path);
 	path_start(other.string_path, string_interaction.sliding_spd, path_action_stop, true);
 	camera_set_view_pos(view_camera[0], xprevious, yprevious);
-	if(_len / path_get_length(other.string_path) > 1) {
+	/*if(x >= other.x_points[array_length(other.x_points) - 1] - 128 && x <= other.x_points[array_length(other.x_points) - 1] + 128 
+		&& y >= other.y_points[array_length(other.y_points) - 1] - 128 && y <= other.y_points[array_length(other.y_points) - 1] + 128) {
+		path_position = 0.95;	
+	} else if(x >= other.x_points[0] - 128 && x <= other.x_points[0] + 128 
+		&& y >= other.y_points[0] - 128 && y <= other.y_points[0] + 128) {
+		path_position = 0;
+	} else*/ if(_len / path_get_length(other.string_path) > 1) {
 		path_position = 1 - _len / path_get_length(other.string_path);
 	} else {
 		path_position = _len / path_get_length(other.string_path);

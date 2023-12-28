@@ -280,6 +280,12 @@ function move_vertical() {
 					: v_spd + grv * magenta_interaction.gravity_multiplier;
 				a = 4;
 			}
+		} else {
+			v_spd += 0.5 * sign(image_yscale);
+			a = 6;
+			if(vortex_interaction.h_boost == 0) {
+				vortex_interaction.can_interact = v_spd > 0 && grv > 0 || v_spd < 0 && grv < 0;
+			}
 		}
 	
 	if(!is_on_ground && state != ADD_STATES.JUMPING && (place_meeting(x + 1, y, tag_get_asset_ids("ground", asset_object)) && right || place_meeting(x - 1, y, tag_get_asset_ids("ground", asset_object)) && left)) {
@@ -311,7 +317,19 @@ function check_image_index() {
 }
 
 function handle_animation() {
-	if(is_on_ground && state != ADD_STATES.JUMPING && state != ADD_STATES.LANDING) {
+	if(state == ADD_STATES.LOST) {
+		sprite_index = spr_add_death;
+		image_speed = 1;
+		if(round(image_index) == 12) {
+			image_index = 12;
+		}
+	} else if(state == ADD_STATES.REBORN) {
+		sprite_index = spr_add_reborn;
+		image_speed = 1;
+		if(round(image_index) == 12) {
+			state = ADD_STATES.IDLE;
+		}
+	} else if(is_on_ground && state != ADD_STATES.JUMPING && state != ADD_STATES.LANDING) {
 		if(squat) {
 			if(sprite_index == spr_add_squat && round(image_index) >= image_number - 1) {
 				state = ADD_STATES.SQUATED;
@@ -329,7 +347,7 @@ function handle_animation() {
 		}
 		check_image_index();
 		image_speed = 1;
-	} else if(abs(v_spd) > 2) {
+	} else if(abs(v_spd) > 2 || (magenta_interaction.gravity_multiplier == magenta_interaction.min_gravity && v_spd >= 0.5)) {
 		if (v_spd < 0 && state == ADD_STATES.JUMPING) {
 			sprite_index = spr_add_jump;
 			//image_speed = round(image_index) >= image_number - 1 ? 0 : 1;
@@ -357,7 +375,8 @@ function check_existance() {
 			audio_stop_sound(snd_add_step);
 		}
 		if(alarm[4] < 0) {
-			alarm[4] = 64;
+			image_index = 0;
+			alarm[4] = 12 * 8;
 		}
 	}
 }
@@ -533,12 +552,12 @@ if(!obj_game_manager.is_paused) {
 		} else if(string_interaction.number != 0 && alarm[6] <= 0) {
 			alarm[6] = 20;
 		}
-		if(state != ADD_STATES.LOST && state != ADD_STATES.ON_STRINGS) {
+		if(state != ADD_STATES.LOST && state != ADD_STATES.ON_STRINGS && state != ADD_STATES.REBORN) {
 			obj_game_manager.global_speed = is_color_hud_open ? 0.25 : 1;
 			is_on_ground = place_meeting(x, y + 1 * sign(grv), tag_get_asset_ids("ground", asset_object));
 			if(location == COLORS.GREEN) {
 				check_green_interaction();
-			} else {
+			} else if(magenta_interaction.can_use) {
 				check_magenta_interaction();
 			}
 			if(state != ADD_STATES.JUMPING && state != ADD_STATES.LANDING && state != ADD_STATES.SQUATING 

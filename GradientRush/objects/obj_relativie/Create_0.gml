@@ -6,7 +6,7 @@ sprite_index = spr_relativie_idle;
 image_index = 0;
 image_xscale = -1;
 
-spd = 1.5;
+spd = 1;
 
 //start
 is_starting = false;

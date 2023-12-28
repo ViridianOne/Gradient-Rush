@@ -81,7 +81,7 @@ function check_existance() {
 	}
 }
 
-function handle_animation() {
+function handle_yellow_animation() {
 	if(state == ADD_STATES.LOST) {
 		sprite_index = spr_tusk_death;
 	} else if(state == ADD_STATES.HIDING_SPIKES) {
@@ -108,6 +108,33 @@ function handle_animation() {
 	}
 }
 
+function handle_blue_animation() {
+	if(state == ADD_STATES.LOST) {
+		sprite_index = spr_tusk_blue_death;
+	} else if(state == ADD_STATES.HIDING_SPIKES) {
+		sprite_index = spr_tusk_blue_hiding_spikes;
+		if(round(image_index) == 4) {
+			is_with_spikes = false;
+			state = ADD_STATES.IDLE;
+			sprite_index = spr_tusk_blue_idle_without_spikes;
+		}
+	} else if (state == ADD_STATES.SHOWING_SPIKES) {
+		sprite_index = spr_tusk_blue_showing_spikes;
+		if(round(image_index) == 11) {
+			is_with_spikes = true;
+		} else if (round(image_index) == 13) {
+			state = ADD_STATES.IDLE;
+			sprite_index = spr_tusk_blue_idle_with_spikes;
+		}
+	} else if(state == ADD_STATES.MOVING && h_spd != 0) {
+		sprite_index = is_with_spikes ? spr_tusk_blue_walking_with_spikes : spr_tusk_blue_walking_without_spikes;
+	} else if(state == ADD_STATES.RUSHING) {
+		sprite_index = spr_tusk_blue_running_with_spikes;
+	} else {
+		sprite_index = is_with_spikes ? spr_tusk_blue_idle_with_spikes : spr_tusk_blue_idle_without_spikes;
+	}
+}
+
 function handle_sound() {
 	if(state == ADD_STATES.LOST && !audio_is_playing(snd_add_death)) {
 		audio_play_sound_at(snd_add_death, x, y, 0, obj_game_manager.fallof_max, obj_game_manager.fallof_factor, 1, false, 4);
@@ -117,7 +144,7 @@ function handle_sound() {
 		audio_play_sound_at(snd_tusk_step, x, y, 0, obj_game_manager.fallof_max, obj_game_manager.fallof_factor, 1, true, 4);
 		audio_stop_sound(snd_tusk_running);
 	} else if(can_roar && state == ADD_STATES.RUSHING && !audio_is_playing(snd_tusk_running)) {
-		//audio_play_sound_at(snd_tusk_roar, x, y, 0, obj_game_manager.fallof_max, obj_game_manager.fallof_factor, 1, false, 4);
+		audio_play_sound_at(snd_tusk_roar, x, y, 0, obj_game_manager.fallof_max, obj_game_manager.fallof_factor, 1, false, 4);
 		audio_play_sound_at(snd_tusk_running, x, y, 0, obj_game_manager.fallof_max, obj_game_manager.fallof_factor, 1, true, 4);
 		audio_stop_sound(snd_tusk_step);
 	} else if(state == ADD_STATES.HIDING_SPIKES && !audio_is_playing(snd_tusk_spikes_hiding)) {
@@ -128,7 +155,7 @@ function handle_sound() {
 		audio_play_sound_at(snd_tusk_spikes_showing, x, y, 0, obj_game_manager.fallof_max, obj_game_manager.fallof_factor, 1, false, 4);
 		audio_stop_sound(snd_tusk_step);
 		audio_stop_sound(snd_tusk_running);
-	} else {
+	} else if(state == ADD_STATES.IDLE) {
 		audio_stop_sound(snd_tusk_step);
 		audio_stop_sound(snd_tusk_running);
 	}
@@ -145,7 +172,7 @@ if(!obj_game_manager.is_paused) {
 		if(alarm[2] <= 0) {
 			alarm[2] = is_with_spikes ? 180 : 360;
 			if(!is_with_spikes) {
-				//audio_play_sound_at(snd_tusk_roar, x, y, 0, obj_game_manager.fallof_max, obj_game_manager.fallof_factor, 1, false, 4);
+				audio_play_sound_at(snd_tusk_roar, x, y, 0, obj_game_manager.fallof_max, obj_game_manager.fallof_factor, 1, false, 4);
 			}
 		}
 
@@ -177,7 +204,11 @@ if(!obj_game_manager.is_paused) {
 		move_horizontal();
 		move_vertical();
 	}
-	handle_animation();
+	if(color == COLORS.YELLOW) {
+		handle_yellow_animation();
+	} else if(color == COLORS.BLUE) {
+		handle_blue_animation();
+	}
 	handle_sound();
 	check_existance();
 }

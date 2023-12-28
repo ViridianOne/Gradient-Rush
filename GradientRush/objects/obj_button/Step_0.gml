@@ -1,4 +1,4 @@
-if(point_in_rectangle(window_mouse_get_x(), window_mouse_get_y(), bbox_left, bbox_top, bbox_right, bbox_bottom)) {
+if((room == rm_main_menu || instance_exists(obj_game_manager) && obj_game_manager.is_paused) && point_in_rectangle(window_mouse_get_x(), window_mouse_get_y(), bbox_left, bbox_top, bbox_right, bbox_bottom)) {
 	if(mouse_check_button_pressed(mb_left)) {
 		audio_play_sound(snd_click, 1, false);
 	}
@@ -8,7 +8,7 @@ if(point_in_rectangle(window_mouse_get_x(), window_mouse_get_y(), bbox_left, bbo
 				room_goto(rm_main_menu);
 				break;
 			case INTERFACE_TYPES.GAME:
-				room_goto(rm_relativie);
+				room_goto(rm_green);
 				break;
 			case INTERFACE_TYPES.CONTINUE:
 				if(instance_exists(obj_game_manager)) {

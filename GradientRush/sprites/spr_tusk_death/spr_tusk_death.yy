@@ -32,8 +32,8 @@
   "nineSlice": null,
   "origin": 7,
   "parent": {
-    "name": "Tusk",
-    "path": "folders/Sprites/Tusk.yy",
+    "name": "YellowTusk",
+    "path": "folders/Sprites/YellowTusk.yy",
   },
   "preMultiplyAlpha": false,
   "sequence": {

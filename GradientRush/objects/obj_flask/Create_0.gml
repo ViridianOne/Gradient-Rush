@@ -7,6 +7,7 @@ image_index = flask_number;
 
 is_grabbed = false;
 is_thrown = false;
+is_broken = false;
 
 audio_listener_orientation(0, 1, 0, 0, 0, 1);
 audio_falloff_set_model(audio_falloff_exponent_distance);

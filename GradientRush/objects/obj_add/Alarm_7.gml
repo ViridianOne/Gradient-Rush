@@ -1,1 +1,3 @@
-make_gravity_jump();
+if(!vortex_interaction.can_interact) {
+	event_user(0);
+}

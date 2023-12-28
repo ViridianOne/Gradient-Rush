@@ -10,7 +10,7 @@
   "bitRate": 128,
   "compression": 0,
   "conversionMode": 0,
-  "duration": 21.422667,
+  "duration": 1.96075,
   "parent": {
     "name": "Tusk",
     "path": "folders/Sounds/Tusk.yy",
@@ -19,5 +19,5 @@
   "sampleRate": 44100,
   "soundFile": "snd_tusk_roar.wav",
   "type": 0,
-  "volume": 0.3,
+  "volume": 0.7,
 }
