@@ -17,6 +17,14 @@ if((room == rm_main_menu || instance_exists(obj_game_manager) && obj_game_manage
 					layer_set_visible("Pause", false);
 				}
 				break;
+			case INTERFACE_TYPES.FEEDBACK:
+				url_open("https://forms.gle/gbExcBEH7BKHk6qr5");
+				break;
+			case INTERFACE_TYPES.SOUND_SWITCHER:
+				obj_music_manager.is_sound_on = !obj_music_manager.is_sound_on;
+				audio_group_set_gain(audiogroup_default, obj_music_manager.is_sound_on ? 1 : 0, 0);
+				label = $"Sounds: {obj_music_manager.is_sound_on ? "ON" : "OFF"}";
+				break;
 			case INTERFACE_TYPES.QUIT:
 				game_end();
 				break;

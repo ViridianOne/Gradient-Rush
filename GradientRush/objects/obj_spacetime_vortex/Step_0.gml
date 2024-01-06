@@ -1,8 +1,9 @@
-function change_gravity(_h_boost, _v_boost, _x, _y) {
+function change_gravity(_h_boost, _v_boost, _x, _y, _angle) {
 	with(obj_add) {
 		vortex_interaction.h_boost = _h_boost;
 		vortex_interaction.v_boost = _v_boost;
 		vortex_interaction.can_interact = false;
+		vortex_interaction.is_vertical = _angle == 0;
 		alarm[7] = 60;
 		obj_add.magenta_interaction.can_use = false;
 		obj_add.magenta_interaction.is_active = false;
@@ -46,11 +47,11 @@ function change_gravity(_h_boost, _v_boost, _x, _y) {
 if(obj_add.vortex_interaction.can_interact && place_meeting(x, y, obj_add)) {
 	if(image_angle == 90) {
 		if(bbox_left <= obj_add.bbox_right || bbox_right >= obj_add.bbox_left) {
-			change_gravity(right_boost * sign(obj_add.image_xscale), 0, x, y);
+			change_gravity(right_boost * sign(obj_add.image_xscale), 0, x, y, image_angle);
 		}
 	} else {
 		if(bbox_top <= obj_add.bbox_bottom || bbox_bottom >= obj_add.bbox_top) {
-			change_gravity(0, down_boost * sign(obj_add.grv), x, y);
+			change_gravity(0, down_boost * sign(obj_add.grv), x, y, image_angle);
 		}
 	}
 }

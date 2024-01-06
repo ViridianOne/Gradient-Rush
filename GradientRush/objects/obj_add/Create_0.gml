@@ -161,7 +161,8 @@ layer_set_fx("StringTiles", string_color_fx);
 vortex_interaction = {
 	h_boost: 0,
 	v_boost: 0,
-	can_interact: true
+	can_interact: true,
+	is_vertical: true
 }
 make_gravity_jump = function() {
 	can_jump = true;

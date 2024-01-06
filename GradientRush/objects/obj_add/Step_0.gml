@@ -283,7 +283,7 @@ function move_vertical() {
 		} else {
 			v_spd += 0.5 * sign(image_yscale);
 			a = 6;
-			if(vortex_interaction.h_boost == 0) {
+			if(vortex_interaction.is_vertical) {
 				vortex_interaction.can_interact = v_spd > 0 && grv > 0 || v_spd < 0 && grv < 0;
 			}
 		}
@@ -498,12 +498,12 @@ function check_color_interaction_with_strings() {
 			string_interaction.can_jump = false;
 			break;
 		case RELATIONSHIPS.SPLIT_ANALOGOUS:
-			string_interaction.h_boost = string_interaction.sliding_spd * 2;
+			string_interaction.h_boost = string_interaction.sliding_spd * 2 * sign(image_xscale);
 			string_interaction.v_boost = abs(string_interaction.sliding_spd) * -10;
 			string_interaction.can_jump = true;
 			break;
 		case RELATIONSHIPS.TRIADIC:
-			string_interaction.h_boost = string_interaction.sliding_spd * -2;
+			string_interaction.h_boost = string_interaction.sliding_spd * 2 * sign(image_xscale);
 			string_interaction.v_boost = abs(string_interaction.sliding_spd) * 2;
 			string_interaction.can_jump = true;
 			break;
